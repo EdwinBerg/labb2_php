@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 27, 2020 at 10:34 AM
+-- Generation Time: May 27, 2020 at 10:37 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -32,17 +32,18 @@ CREATE TABLE `login` (
   `user_id` int(11) NOT NULL,
   `email` varchar(30) COLLATE utf8_swedish_ci NOT NULL,
   `name` varchar(30) COLLATE utf8_swedish_ci NOT NULL,
-  `password` varchar(30) COLLATE utf8_swedish_ci NOT NULL
+  `password` varchar(30) COLLATE utf8_swedish_ci NOT NULL,
+  `admin_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 --
 -- Dumping data for table `login`
 --
 
-INSERT INTO `login` (`user_id`, `email`, `name`, `password`) VALUES
-(1, 'admin@hotmail.com', '', 'admin123'),
-(2, '', '', ''),
-(3, '', '', '');
+INSERT INTO `login` (`user_id`, `email`, `name`, `password`, `admin_id`) VALUES
+(1, 'admin@hotmail.com', 'Göran', 'admin123', 1),
+(2, '', '', '', 0),
+(3, '', '', '', 0);
 
 --
 -- Indexes for dumped tables
