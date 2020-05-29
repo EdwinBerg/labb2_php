@@ -69,25 +69,72 @@ if($_SESSION['checkLogin'] == 1) {
         <input type="submit" value="Medlemmar" name="medlemmar">
     </form>
 <?php 
-
-// Om fotboll är valt ||||| Lägg till så att man kollar om användaren är admin och äre så så ska en redigera knapp komma upp, antingen vid alla medlemmar eller vid varje sport så-
-// man kan lägga till, tabort eller redigera medlemmar. 
+ // Översikt över alla medlemmar
 if(isset($_POST['medlemmar'])) {
-    $sql = "SELECT * FROM medlem WHERE 1";
+    $sql = "SELECT medlem.name, avgift.avgift
+    FROM pivot
+    JOIN medlem ON medlem_id = medlem.id 
+    JOIN avgift ON avgift_id = avgift.id
+    WHERE 1";
     $sth = $dbh->prepare($sql);
     $sth->execute();
     $result = $sth->fetchAll();
     foreach($result AS $medlem) {
-        echo $medlem['name'] . "<br>";
+        echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] ."<br>";
     }
     
 }
-
-
-
-
+// översikt över alla som spelar fotboll
+if(isset($_POST['fotboll'])) {
+    $sql = "SELECT medlem.name, sports.sport, avgift.avgift
+    FROM pivot
+    JOIN medlem ON medlem_id = medlem.id
+    JOIN sports ON sport_id = sports.id
+    JOIN avgift ON avgift_id = avgift.id
+    WHERE sport_id = 1";
+    $sth = $dbh->prepare($sql);
+    $sth->execute();
+    $result = $sth->fetchAll();
+    foreach($result AS $medlem) {
+         echo $medlem['name'] . " - " . $medlem['sport'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
+    }
+  
+ }
+ // översikt över alla som åker skidor
+ if(isset($_POST['skidor'])) {
+    $sql = "SELECT medlem.name, sports.sport, avgift.avgift
+    FROM pivot
+    JOIN medlem ON medlem_id = medlem.id
+    JOIN sports ON sport_id = sports.id
+    JOIN avgift ON avgift_id = avgift.id
+    WHERE sport_id = 2";
+    $sth = $dbh->prepare($sql);
+    $sth->execute();
+    $result = $sth->fetchAll();
+    foreach($result AS $medlem) {
+         echo $medlem['name'] . " - " . $medlem['sport'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
+    }
+  
+ }
+ // översikt över alla som håller på med gymnastik
+ if(isset($_POST['gymnastik'])) {
+    $sql = "SELECT medlem.name, sports.sport, avgift.avgift 
+    FROM pivot
+    JOIN medlem ON medlem_id = medlem.id
+    JOIN sports ON sport_id = sports.id
+    JOIN avgift ON avgift_id = avgift.id
+    WHERE sport_id = 3";
+    $sth = $dbh->prepare($sql);
+    $sth->execute();
+    $result = $sth->fetchAll();
+    foreach($result AS $medlem) {
+         echo $medlem['name'] . " - " . $medlem['sport'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
+    }
+  
+ }
 
 } else {
+    // om man inte har eller är inloggad så ska denna visas
     ?>
     <form method="post">
         <h2>Logga in </h2>
