@@ -72,12 +72,15 @@ if($_SESSION['checkLogin'] == 1) {
 
 // Om fotboll är valt ||||| Lägg till så att man kollar om användaren är admin och äre så så ska en redigera knapp komma upp, antingen vid alla medlemmar eller vid varje sport så-
 // man kan lägga till, tabort eller redigera medlemmar. 
-if(isset($_POST['fotboll'])) {
-    $sql = "SELECT name FROM login WHERE sport = fotboll";
+if(isset($_POST['medlemmar'])) {
+    $sql = "SELECT * FROM medlem WHERE 1";
     $sth = $dbh->prepare($sql);
-    $sth->execute(['sport' => 'fotboll']);
+    $sth->execute();
     $result = $sth->fetchAll();
-    var_dump($result[0]);
+    foreach($result AS $medlem) {
+        echo $medlem['name'] . "<br>";
+    }
+    
 }
 
 
