@@ -241,6 +241,24 @@ if(isset($_POST['addToPivot'])) {
    
 }
 
+// Ta bort från pivot
+if(isset($_POST['removeFromPivot'])) {
+    $pivotMember = $_POST['pivotMember'];
+    $pivotSport = $_POST['pivotSport'];
+    $pivotTeam = $_POST['pivotTeam'];
+    $pivotAvgift = $_POST['pivotAvgift'];
+
+    $name = "SELECT * FROM pivot WHERE medlem_id = :medlem_id AND lag_id = :sport_id AND lag_id = :lag_id";
+    $namesth = $dbh->prepare($name);
+    $namesth->execute();
+    $resultName =  $namesth->fetchAll();
+    $sql = "DELETE FROM pivot WHERE medlem_id = :medlem_id AND sport_id = :sport_id AND lag_id = :lag_id";
+    $sth = $dbh->prepare($sql);
+    $sth->execute([':medlem_id' => $pivotMember, 'sport_id' => $pivotSport, 'lag_id' => $pivotTeam]);
+    $result = $sth->fetchAll();
+    echo "<center><p> " . $resultName[0]["name"] . " har tagits bort!</p></center>";
+}
+
 // ###########################################################################
 // uppdatera en medlem i pivot
 if(isset($_POST['update'])) {
