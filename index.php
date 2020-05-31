@@ -121,6 +121,28 @@ if($_SESSION['checkLogin'] == 1) {
     <div>
     <form method="post">
         <h3>Uppdatera en medlem</h3>
+        <label for="editUser">Medlem att ändra:</label>
+        <select id="editUser" name="pivotId">
+            <option>--Välj--</option>
+            <?php
+                $sql = "SELECT medlem.name, medlem.id, avgift.avgift, sports.sport, lag.lag, pivot.id
+                FROM pivot
+                JOIN medlem ON medlem_id = medlem.id
+                JOIN sports ON sport_id = sports.id
+                JOIN avgift ON avgift_id = avgift.id
+                JOIN lag ON lag_id = lag.id
+                WHERE 1";
+                $sth = $dbh->prepare($sql);
+                $sth->execute();
+                $result = $sth->fetchAll();
+
+                foreach($result as $medlem) {
+                    echo "<option value=\"" . $medlem["id"] . "\">" . $medlem['name'] . " - " . $medlem['sport'] . " | Lag: " . $medlem['lag'] . " | Medlemsavgift: " . $medlem['avgift'] . "</option>";
+                }
+            ?>
+        </select> <br><br>
+        
+
         <label for="medlem">Medlem:</label>
             <select id="medlem" name="pivotMember">
                 <option>--Välj Medlem--</option>
@@ -271,10 +293,11 @@ if(isset($_POST['update'])) {
     $pivotTeam = $_POST['pivotTeam'];
     $pivotSport = $_POST['pivotSport'];
     $pivotAvgift = $_POST['pivotAvgift'];
+    $pivotId = $_POST['pivotId'];
 
-    $sql = "UPDATE pivot Set (:pivotMember, :pivotTeam, :pivotSport, :pivotAvgift) WHERE (medlem_id, sport_id, lag_id, avgift_id)";
+    $sql = "UPDATE pivot SET medlem_id = :pivotMember, lag_id = :pivotTeam, sport_id = :pivotSport, avgift_id = :pivotAvgift WHERE id = :pivotId";
     $sth = $dbh->prepare($sql);
-    $sth->execute([':pivotMember' => $pivotMember, ':pivotTeam' => $pivotTeam, ':pivotSport' => $pivotSport, ':pivotAvgift' => $pivotAvgift]);
+    $sth->execute([':pivotMember' => $pivotMember, ':pivotTeam' => $pivotTeam, ':pivotSport' => $pivotSport, ':pivotAvgift' => $pivotAvgift, ':pivotId' => $pivotId]);
     $result = $sth->fetchAll();
     echo "<p> En ny medlem har uppdaterats i pivot tabellen</p>";
    
