@@ -76,7 +76,7 @@ if($_SESSION['checkLogin'] == 1) {
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $medlem) {
-                        echo "<option value=\"" . $medlem['name'] . "\">" . $medlem['name'] . "</option>";
+                        echo "<option value=\"" . $medlem['id'] . "\">" . $medlem['name'] . "</option>";
                     }
                 ?>
             </select>
@@ -159,9 +159,24 @@ if($_SESSION['checkLogin'] == 1) {
                         echo "<option value=\"" . $sport['sport'] . "\">" . $sport['sport'] . "</option>";
                     }
                 ?>
-            </select> <br><br>
-        <input type="submit" value="Uppdatera" name="update">
+            </select> <br>
+
+            <label for="lag">Medlemsavgift:</label>
+            <select id="lag" name="medlemsavgift">
+
+                <?php
+                    $sql = "SELECT * FROM avgift";
+                    $sth = $dbh->prepare($sql);
+                    $sth-> execute();
+                    $result = $sth->fetchAll();
+                    foreach($result as $sport) {
+                        echo "<option value=\"" . $sport['avgift'] . "\">" . $sport['avgift'] . "</option>";
+                    }
+                ?>
+            </select> <br> <br>
         <input type="submit" value="Lägg till" name="addToPivot">
+        <input type="submit" value="Uppdatera" name="update">
+        <input type="submit" value="Ta bort" name="removeFromPivot">
     </form> 
     </div>
     <br><hr style="width: 100%;"><br>
