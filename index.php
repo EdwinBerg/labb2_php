@@ -122,55 +122,55 @@ if($_SESSION['checkLogin'] == 1) {
     <form method="post">
         <h3>Uppdatera en medlem</h3>
         <label for="medlem">Medlem:</label>
-            <select id="medlem" name="member">
-
+            <select id="medlem" name="pivotMember">
+                <option>--Välj Medlem--</option>
                 <?php
                     $sql = "SELECT * FROM medlem";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $medlem) {
-                        echo "<option value=\"" . $medlem['name'] . "\">" . $medlem['name'] . "</option>";
+                        echo "<option value=\"" . $medlem['id'] . "\">" . $medlem['name'] . "</option>";
                     }
                 ?>
             </select> <br>
         <label for="lag">Lag:</label>
-            <select id="lag" name="teamChosen">
-
+            <select id="lag" name="pivotTeam">
+                <option>--Välj Lag--</option>
                 <?php
                     $sql = "SELECT * FROM lag";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $lag) {
-                        echo "<option value=\"" . $lag['lag'] . "\">" . $lag['lag'] . "</option>";
+                        echo "<option value=\"" . $lag['id'] . "\">" . $lag['lag'] . "</option>";
                     }
                 ?>
             </select> <br>
             <label for="lag">Sport:</label>
-            <select id="lag" name="sportChosen">
-
+            <select id="lag" name="pivotSport">
+                <option>--Välj Sport--</option>
                 <?php
                     $sql = "SELECT * FROM sports";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $sport) {
-                        echo "<option value=\"" . $sport['sport'] . "\">" . $sport['sport'] . "</option>";
+                        echo "<option value=\"" . $sport['id'] . "\">" . $sport['sport'] . "</option>";
                     }
                 ?>
             </select> <br>
 
             <label for="lag">Medlemsavgift:</label>
-            <select id="lag" name="medlemsavgift">
-
+            <select id="lag" name="pivotAvgift">
+                <option>--Välj Medlemsavgift--</option>
                 <?php
                     $sql = "SELECT * FROM avgift";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
-                    foreach($result as $sport) {
-                        echo "<option value=\"" . $sport['avgift'] . "\">" . $sport['avgift'] . "</option>";
+                    foreach($result as $avgift) {
+                        echo "<option value=\"" . $avgift['id'] . "\">" . $avgift['avgift'] . "</option>";
                     }
                 ?>
             </select> <br> <br>
@@ -240,6 +240,24 @@ if(isset($_POST['update'])) {
         echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] . " | Användar id: " . $medlem['id'] . "<br>";
     }
    
+}
+
+// Ta bort från pivot
+if(isset($_POST['removeFromPivot'])) {
+    $pivotMember = $_POST['pivotMember'];
+    $pivotSport = $_POST['pivotSport'];
+    $pivotTeam = $_POST['pivotTeam'];
+    $pivotAvgift = $_POST['pivotAvgift'];
+
+    $name = "SELECT * FROM pivot WHERE medlem_id = :medlem_id AND lag_id = :sport_id AND lag_id = :lag_id";
+    $namesth = $dbh->prepare($name);
+    $namesth->execute();
+    $resultName =  $namesth->fetchAll();
+    $sql = "DELETE FROM pivot WHERE medlem_id = :medlem_id AND sport_id = :sport_id AND lag_id = :lag_id";
+    $sth = $dbh->prepare($sql);
+    $sth->execute([':medlem_id' => $pivotMember, 'sport_id' => $pivotSport, 'lag_id' => $pivotTeam]);
+    $result = $sth->fetchAll();
+    echo "<center><p> " . $resultName[0]["name"] . " har tagits bort!</p></center>";
 }
 // ###########################################################################
 // lägger till 3st sporter
