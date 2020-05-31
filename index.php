@@ -60,6 +60,7 @@ if($_SESSION['checkLogin'] == 1) {
         <input name="newMember" placeholder="Skriv in ny medlem">
          <input type="submit" value="Lägg till" name="addMember">
      </div>
+     </form>
     <br><br>
 
 <!-- tabort medlem -->
@@ -67,7 +68,7 @@ if($_SESSION['checkLogin'] == 1) {
         <h3>Ta bort medlem</h3>
         <form method="post">
             <label for="medlem">Medlem:</label>
-            <select id="medlem" name="removeMember">
+            <select id="medlem" name="member">
 
                 <?php
                     $sql = "SELECT * FROM medlem";
@@ -86,9 +87,11 @@ if($_SESSION['checkLogin'] == 1) {
 
 <!-- lägg till ett lag-->
      <div>
-         <h3>Lägg till ett lag</h3>
+    <form method="post">
+        <h3>Lägg till ett lag</h3>
         <input name="newTeam" placeholder="Skriv in nytt lag">
         <input type="submit" value="Lägg till" name="addTeam">
+     </form>
      </div>
     <br><br>
 
@@ -97,7 +100,7 @@ if($_SESSION['checkLogin'] == 1) {
         <h3>Ta bort ett lag</h3>
         <form method="post">
             <label for="lag">Lag:</label>
-            <select id="lag" name="removeTeam">
+            <select id="lag" name="teamChosen">
 
                 <?php
                     $sql = "SELECT * FROM lag";
@@ -116,15 +119,52 @@ if($_SESSION['checkLogin'] == 1) {
 
     <!-- uppdatera medlem -->
     <div>
+    <form method="post">
         <h3>Uppdatera en medlem</h3>
-        <!-- gör drop down -->
-        dropdown namn med id <br>
-        dropdown med lag <br>
-        dropdown med sport <br>
-        <input type="submit" value="Redigera" name="redigera">
+        <label for="medlem">Medlem:</label>
+            <select id="medlem" name="member">
+
+                <?php
+                    $sql = "SELECT * FROM medlem";
+                    $sth = $dbh->prepare($sql);
+                    $sth-> execute();
+                    $result = $sth->fetchAll();
+                    foreach($result as $medlem) {
+                        echo "<option value=\"" . $medlem['name'] . "\">" . $medlem['name'] . "</option>";
+                    }
+                ?>
+            </select> <br>
+        <label for="lag">Lag:</label>
+            <select id="lag" name="teamChosen">
+
+                <?php
+                    $sql = "SELECT * FROM lag";
+                    $sth = $dbh->prepare($sql);
+                    $sth-> execute();
+                    $result = $sth->fetchAll();
+                    foreach($result as $lag) {
+                        echo "<option value=\"" . $lag['lag'] . "\">" . $lag['lag'] . "</option>";
+                    }
+                ?>
+            </select> <br>
+            <label for="lag">Sport:</label>
+            <select id="lag" name="sportChosen">
+
+                <?php
+                    $sql = "SELECT * FROM sports";
+                    $sth = $dbh->prepare($sql);
+                    $sth-> execute();
+                    $result = $sth->fetchAll();
+                    foreach($result as $sport) {
+                        echo "<option value=\"" . $sport['sport'] . "\">" . $sport['sport'] . "</option>";
+                    }
+                ?>
+            </select> <br><br>
+        <input type="submit" value="Uppdatera" name="update">
+        <input type="submit" value="Lägg till" name="addToPivot">
+    </form> 
     </div>
     <br><hr style="width: 100%;"><br>
-  </form> 
  </div>
  <?php 
  
@@ -137,15 +177,52 @@ if($_SESSION['checkLogin'] == 1) {
      $result = $sth->fetchAll();
      echo "<center><p> " . $newMember . " har lagts till!</p></center>";
  }
-
+// ta bort en medlem
  if(isset($_POST['removeMember'])) {
-    $removeMember = $_POST['removeMember'];
-    $sql = "DELETE * FROM medlem WHERE (name) VALUES ($removeMember)";
+    $removeMember = $_POST['member'];
+    $sql = "DELETE FROM medlem WHERE name = :name";
     $sth = $dbh->prepare($sql);
-    $sth->execute([$removeMember => 'name']);
+    $sth->execute([':name' => $removeMember]);
     $result = $sth->fetchAll();
-    echo "<center><p> " . $removeMember . " har lagts till!</p></center>";
+    echo "<center><p> " . $removeMember . " har tagits bort!</p></center>";
 }
+
+// lägg till ett lag 
+if(isset($_POST['addTeam'])) {
+    $newTeam = $_POST['newTeam'];
+    $sql = "INSERT INTO lag (lag) VALUES (:lag)";
+    $sth = $dbh->prepare($sql);
+    $sth->execute([':lag' => $newTeam]);
+    $result = $sth->fetchAll();
+    echo "<center><p> " . $newTeam . " har lagts till!</p></center>";
+}
+
+// ta bort ett lag 
+if(isset($_POST['removeTeam'])) {
+    $removeTeam = $_POST['teamChosen'];
+    $sql = "DELETE FROM lag WHERE lag = :lag";
+    $sth = $dbh->prepare($sql);
+    $sth->execute([':lag' => $removeTeam]);
+    $result = $sth->fetchAll();
+    echo "<center><p> " . $removeTeam . " har tagits bort!</p></center>";
+}
+// ###########################################################################
+// uppdatera en medlem
+if(isset($_POST['update'])) {
+    $sql = "SELECT medlem.name, medlem.id, avgift.avgift
+    FROM pivot
+    JOIN medlem ON medlem_id = medlem.id
+    JOIN avgift ON avgift_id = avgift.id
+    WHERE 1";
+    $sth = $dbh->prepare($sql);
+    $sth->execute();
+    $result = $sth->fetchAll();
+    foreach($result AS $medlem) {
+        echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] . " | Användar id: " . $medlem['id'] . "<br>";
+    }
+   
+}
+// ###########################################################################
 // lägger till 3st sporter
 ?>
     <form method="post">
