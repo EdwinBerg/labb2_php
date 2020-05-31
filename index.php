@@ -253,7 +253,7 @@ if(isset($_POST['addToPivot'])) {
     $pivotSport = $_POST['pivotSport'];
     $pivotAvgift = $_POST['pivotAvgift'];
 
-    $sql = "INSERT INTO pivot (medlem_id, lag_id, sport_id, avgift_id) VALUES (:pivotMember, :pivotTeam, :pivotSport, :pivotAvgift)";
+    $sql = "INSERT INTO pivot (medlem_id, sport_id, lag_id, avgift_id) VALUES (:pivotMember, :pivotSport, :pivotTeam, :pivotAvgift)";
     $sth = $dbh->prepare($sql);
     $sth->execute([':pivotMember' => $pivotMember, ':pivotTeam' => $pivotTeam, ':pivotSport' => $pivotSport, ':pivotAvgift' => $pivotAvgift]);
     $result = $sth->fetchAll();
@@ -268,15 +268,20 @@ if(isset($_POST['removeFromPivot'])) {
     $pivotTeam = $_POST['pivotTeam'];
     $pivotAvgift = $_POST['pivotAvgift'];
 
-    $name = "SELECT * FROM pivot WHERE medlem_id = :medlem_id AND lag_id = :sport_id AND lag_id = :lag_id";
+    $name = "SELECT medlem.name, lag.lag, sports.sport FROM pivot
+    JOIN medlem ON medlem_id = medlem.id
+    JOIN sports ON sport_id = sports.id 
+    JOIN lag ON lag_id = lag.id
+    WHERE medlem.id = :medlem_id AND sport_id = :sport_id AND lag_id = :lag_id";
     $namesth = $dbh->prepare($name);
-    $namesth->execute();
+    $namesth->execute([':medlem_id' => $pivotMember, 'sport_id' => $pivotSport, 'lag_id' => $pivotTeam]);
     $resultName =  $namesth->fetchAll();
+
     $sql = "DELETE FROM pivot WHERE medlem_id = :medlem_id AND sport_id = :sport_id AND lag_id = :lag_id";
     $sth = $dbh->prepare($sql);
     $sth->execute([':medlem_id' => $pivotMember, 'sport_id' => $pivotSport, 'lag_id' => $pivotTeam]);
     $result = $sth->fetchAll();
-    echo "<center><p> " . $resultName[0]["name"] . " har tagits bort!</p></center>";
+    echo "<center><p> " . $resultName[0]["name"] . " har tagits bort från laget/gruppen " . $resultName[0]["lag"] . " i " . $resultName[0]["sport"] . "!</p></center>";
 }
 
 // ###########################################################################
@@ -347,39 +352,41 @@ if(isset($_POST['fotboll'])) {
     $sth->execute();
     $result = $sth->fetchAll();
     foreach($result AS $medlem) {
-         echo $medlem['name'] . " - " . $medlem['sport'] . " | Lag: " . $medlem['lag'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
+        echo $medlem['name'] . " - " . $medlem['sport'] . " | Lag: " . $medlem['lag'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
     }
   
  }
  // översikt över alla som åker skidor
  if(isset($_POST['skidor'])) {
-    $sql = "SELECT medlem.name, sports.sport, avgift.avgift
+    $sql = "SELECT medlem.name, sports.sport, avgift.avgift, lag.lag
     FROM pivot
     JOIN medlem ON medlem_id = medlem.id
     JOIN sports ON sport_id = sports.id
     JOIN avgift ON avgift_id = avgift.id
+    JOIN lag ON lag_id = lag.id
     WHERE sport_id = 2";
     $sth = $dbh->prepare($sql);
     $sth->execute();
     $result = $sth->fetchAll();
     foreach($result AS $medlem) {
-         echo $medlem['name'] . " - " . $medlem['sport'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
+        echo $medlem['name'] . " - " . $medlem['sport'] . " | Lag: " . $medlem['lag'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
     }
   
  }
  // översikt över alla som håller på med gymnastik
  if(isset($_POST['gymnastik'])) {
-    $sql = "SELECT medlem.name, sports.sport, avgift.avgift 
+    $sql = "SELECT medlem.name, sports.sport, avgift.avgift, lag.lag
     FROM pivot
     JOIN medlem ON medlem_id = medlem.id
     JOIN sports ON sport_id = sports.id
     JOIN avgift ON avgift_id = avgift.id
+    JOIN lag ON lag_id = lag.id
     WHERE sport_id = 3";
     $sth = $dbh->prepare($sql);
     $sth->execute();
     $result = $sth->fetchAll();
     foreach($result AS $medlem) {
-         echo $medlem['name'] . " - " . $medlem['sport'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
+        echo $medlem['name'] . " - " . $medlem['sport'] . " | Lag: " . $medlem['lag'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
     }
   
  }
