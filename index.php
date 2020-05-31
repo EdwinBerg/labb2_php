@@ -226,19 +226,18 @@ if(isset($_POST['removeTeam'])) {
     echo "<center><p> " . $removeTeam . " har tagits bort!</p></center>";
 }
 // ###########################################################################
-// uppdatera en medlem
-if(isset($_POST['update'])) {
-    $sql = "SELECT medlem.name, medlem.id, avgift.avgift
-    FROM pivot
-    JOIN medlem ON medlem_id = medlem.id
-    JOIN avgift ON avgift_id = avgift.id
-    WHERE 1";
+// lägg till en medlem i pivot
+if(isset($_POST['addToPivot'])) {
+    $pivotMember = $_POST['pivotMember'];
+    $pivotTeam = $_POST['pivotTeam'];
+    $pivotSport = $_POST['pivotSport'];
+    $pivotAvgift = $_POST['pivotAvgift'];
+
+    $sql = "INSERT INTO pivot (medlem_id, sport_id, lag_id, avgift_id) VALUES (:pivotMember, :pivotTeam, :pivotSport, :pivotAvgift)";
     $sth = $dbh->prepare($sql);
-    $sth->execute();
+    $sth->execute([':pivotMember' => $pivotMember, ':pivotTeam' => $pivotTeam, ':pivotSport' => $pivotSport, ':pivotAvgift' => $pivotAvgift]);
     $result = $sth->fetchAll();
-    foreach($result AS $medlem) {
-        echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] . " | Användar id: " . $medlem['id'] . "<br>";
-    }
+    echo "<p> En ny medlem har lagts till i pivot tabellen</p>";
    
 }
 
