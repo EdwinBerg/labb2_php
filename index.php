@@ -62,10 +62,14 @@ if($_SESSION['checkLogin'] == 1) {
      </div>
      </form>
     <br><br>
+</form>
+ 
 
-<!-- tabort medlem -->
+<!-- ta bort medlem formulär-->
      <div>
         <h3>Ta bort medlem</h3>
+        
+        
         <form method="post">
             <label for="medlem">Medlem:</label>
             <select id="medlem" name="member">
@@ -76,24 +80,25 @@ if($_SESSION['checkLogin'] == 1) {
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $medlem) {
-                        echo "<option value=\"" . $medlem['name'] . "\">" . $medlem['name'] . "</option>";
+                        echo "<option value=\"" . $medlem['id'] . "\">" . $medlem['name'] . "</option>";
                     }
                 ?>
             </select>
-            <input type="submit" value="Ta bort" name="removeMember">
+            <input type="submit" name="deleteUser">
         </form>
      </div>
      <br><hr style="width: 100%;"><br>
 
 <!-- lägg till ett lag-->
-     <div>
     <form method="post">
-        <h3>Lägg till ett lag</h3>
-        <input name="newTeam" placeholder="Skriv in nytt lag">
-        <input type="submit" value="Lägg till" name="addTeam">
-     </form>
-     </div>
-    <br><br>
+        <div>
+            <h3>Lägg till ett lag</h3>
+            <input name="newTeam" placeholder="Skriv in nytt lag">
+            <input type="submit" value="Lägg till" name="addTeam">
+        </div>
+        <br><br>
+    </form>
+
 
 <!-- tabort ett lag -->
      <div>
@@ -108,16 +113,17 @@ if($_SESSION['checkLogin'] == 1) {
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $lag) {
-                        echo "<option value=\"" . $lag['lag'] . "\">" . $lag['lag'] . "</option>";
+                        echo "<option value=\"" . $lag['id'] . "\">" . $lag['lag'] . "</option>";
                     }
                 ?>
             </select>
-            <input type="submit" value="Ta bort" name="removeTeam">
+            <input type="submit" name="deleteTeam">
         </form>
     </div>
     <br><hr style="width: 100%;"><br>
 
     <!-- uppdatera medlem -->
+    <form>
     <div>
     <form method="post">
         <h3>Uppdatera en medlem</h3>
