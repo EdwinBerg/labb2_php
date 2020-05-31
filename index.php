@@ -61,60 +61,68 @@ if($_SESSION['checkLogin'] == 1) {
          <input type="submit" value="Lägg till" name="addMember">
      </div>
     <br><br>
+</form>
+ 
 
-<!-- tabort medlem -->
+<!-- ta bort medlem formulär-->
      <div>
         <h3>Ta bort medlem</h3>
+        
+        
         <form method="post">
-            <label for="medlem">Medlem:</label>
-            <select id="medlem" name="removeMember">
-
+        <label for="medlem">Medlem:</label>
+            <select name="removeMember">
+                <option>-- Välj en medlem --</option>
                 <?php
                     $sql = "SELECT * FROM medlem";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $medlem) {
-                        echo "<option value=\"" . $medlem['name'] . "\">" . $medlem['name'] . "</option>";
+                        echo "<option value=\"" . $medlem['id'] . "\">" . $medlem['name'] . "</option>";
                     }
                 ?>
             </select>
-            <input type="submit" value="Ta bort" name="removeMember">
+            <input type="submit" name="deleteUser">
         </form>
      </div>
      <br><hr style="width: 100%;"><br>
 
 <!-- lägg till ett lag-->
-     <div>
-         <h3>Lägg till ett lag</h3>
-        <input name="newTeam" placeholder="Skriv in nytt lag">
-        <input type="submit" value="Lägg till" name="addTeam">
-     </div>
-    <br><br>
+    <form method="post">
+        <div>
+            <h3>Lägg till ett lag</h3>
+            <input name="newTeam" placeholder="Skriv in nytt lag">
+            <input type="submit" value="Lägg till" name="addTeam">
+        </div>
+        <br><br>
+    </form>
+
 
 <!-- tabort ett lag -->
      <div>
         <h3>Ta bort ett lag</h3>
         <form method="post">
-            <label for="lag">Lag:</label>
-            <select id="lag" name="removeTeam">
-
+        <label for="lag">Lag:</label>
+            <select name="removeTeam">
+                <option>-- Välj ett lag --</option>
                 <?php
                     $sql = "SELECT * FROM lag";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $lag) {
-                        echo "<option value=\"" . $lag['lag'] . "\">" . $lag['lag'] . "</option>";
+                        echo "<option value=\"" . $lag['id'] . "\">" . $lag['lag'] . "</option>";
                     }
                 ?>
             </select>
-            <input type="submit" value="Ta bort" name="removeTeam">
+            <input type="submit" name="deleteTeam">
         </form>
     </div>
     <br><hr style="width: 100%;"><br>
 
     <!-- uppdatera medlem -->
+    <form>
     <div>
         <h3>Uppdatera en medlem</h3>
         <!-- gör drop down -->
@@ -138,14 +146,37 @@ if($_SESSION['checkLogin'] == 1) {
      echo "<center><p> " . $newMember . " har lagts till!</p></center>";
  }
 
- if(isset($_POST['removeMember'])) {
-    $removeMember = $_POST['removeMember'];
-    $sql = "DELETE * FROM medlem WHERE (name) VALUES ($removeMember)";
+ // Lägg till ett lag
+ if(isset($_POST['addTeam'])) {
+    $newTeam = $_POST['newTeam'];
+    $sql = "INSERT INTO lag (lag) VALUES (:lag)";
     $sth = $dbh->prepare($sql);
-    $sth->execute([$removeMember => 'name']);
+    $sth->execute([':lag' => $newTeam]);
     $result = $sth->fetchAll();
-    echo "<center><p> " . $removeMember . " har lagts till!</p></center>";
+    echo "<center><p> " . $newTeam . " har lagts till!</p></center>";
 }
+
+ // Ta bort en medlem
+ if(isset($_POST['deleteUser'])) {
+    $removeMember = $_POST['removeMember'];
+    $sql = "DELETE FROM medlem WHERE id = $removeMember";
+    $sth = $dbh->prepare($sql);
+    $sth->execute();
+    $result = $sth->fetchAll();
+    echo "<center><p> " . $removeMember . " har tagits bort!</p></center>";
+}
+
+ // Ta bort ett lag
+ if(isset($_POST['deleteTeam'])) {
+    $removeTeam = $_POST['removeTeam'];
+    $sql = "DELETE FROM lag WHERE id = $removeTeam";
+    $sth = $dbh->prepare($sql);
+    $sth->execute();
+    $result = $sth->fetchAll();
+    echo "<center><p> " . $removeTeam . " har tagits bort!</p></center>";
+}
+
+
 // lägger till 3st sporter
 ?>
     <form method="post">
