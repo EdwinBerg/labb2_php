@@ -225,7 +225,7 @@ if(isset($_POST['removeTeam'])) {
     $result = $sth->fetchAll();
     echo "<center><p> " . $removeTeam . " har tagits bort!</p></center>";
 }
-// ###########################################################################
+
 // lägg till en medlem i pivot
 if(isset($_POST['addToPivot'])) {
     $pivotMember = $_POST['pivotMember'];
@@ -240,7 +240,24 @@ if(isset($_POST['addToPivot'])) {
     echo "<p> En ny medlem har lagts till i pivot tabellen</p>";
    
 }
+
 // ###########################################################################
+// uppdatera en medlem i pivot
+if(isset($_POST['update'])) {
+    $pivotMember = $_POST['pivotMember'];
+    $pivotTeam = $_POST['pivotTeam'];
+    $pivotSport = $_POST['pivotSport'];
+    $pivotAvgift = $_POST['pivotAvgift'];
+
+    $sql = "UPDATE pivot Set (:pivotMember, :pivotTeam, :pivotSport, :pivotAvgift) WHERE (medlem_id, sport_id, lag_id, avgift_id)";
+    $sth = $dbh->prepare($sql);
+    $sth->execute([':pivotMember' => $pivotMember, ':pivotTeam' => $pivotTeam, ':pivotSport' => $pivotSport, ':pivotAvgift' => $pivotAvgift]);
+    $result = $sth->fetchAll();
+    echo "<p> En ny medlem har uppdaterats i pivot tabellen</p>";
+   
+}
+// ###########################################################################
+
 // lägger till 3st sporter
 ?>
     <form method="post">
