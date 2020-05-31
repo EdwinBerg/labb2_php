@@ -122,55 +122,55 @@ if($_SESSION['checkLogin'] == 1) {
     <form method="post">
         <h3>Uppdatera en medlem</h3>
         <label for="medlem">Medlem:</label>
-            <select id="medlem" name="member">
-
+            <select id="medlem" name="pivotMember">
+                <option>--Välj Medlem--</option>
                 <?php
                     $sql = "SELECT * FROM medlem";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $medlem) {
-                        echo "<option value=\"" . $medlem['name'] . "\">" . $medlem['name'] . "</option>";
+                        echo "<option value=\"" . $medlem['id'] . "\">" . $medlem['name'] . "</option>";
                     }
                 ?>
             </select> <br>
         <label for="lag">Lag:</label>
-            <select id="lag" name="teamChosen">
-
+            <select id="lag" name="pivotTeam">
+                <option>--Välj Lag--</option>
                 <?php
                     $sql = "SELECT * FROM lag";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $lag) {
-                        echo "<option value=\"" . $lag['lag'] . "\">" . $lag['lag'] . "</option>";
+                        echo "<option value=\"" . $lag['id'] . "\">" . $lag['lag'] . "</option>";
                     }
                 ?>
             </select> <br>
             <label for="lag">Sport:</label>
-            <select id="lag" name="sportChosen">
-
+            <select id="lag" name="pivotSport">
+                <option>--Välj Sport--</option>
                 <?php
                     $sql = "SELECT * FROM sports";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $sport) {
-                        echo "<option value=\"" . $sport['sport'] . "\">" . $sport['sport'] . "</option>";
+                        echo "<option value=\"" . $sport['id'] . "\">" . $sport['sport'] . "</option>";
                     }
                 ?>
             </select> <br>
 
             <label for="lag">Medlemsavgift:</label>
-            <select id="lag" name="medlemsavgift">
-
+            <select id="lag" name="pivotAvgift">
+                <option>--Välj Medlemsavgift--</option>
                 <?php
                     $sql = "SELECT * FROM avgift";
                     $sth = $dbh->prepare($sql);
                     $sth-> execute();
                     $result = $sth->fetchAll();
-                    foreach($result as $sport) {
-                        echo "<option value=\"" . $sport['avgift'] . "\">" . $sport['avgift'] . "</option>";
+                    foreach($result as $avgift) {
+                        echo "<option value=\"" . $avgift['id'] . "\">" . $avgift['avgift'] . "</option>";
                     }
                 ?>
             </select> <br> <br>
@@ -226,19 +226,18 @@ if(isset($_POST['removeTeam'])) {
     echo "<center><p> " . $removeTeam . " har tagits bort!</p></center>";
 }
 // ###########################################################################
-// uppdatera en medlem
-if(isset($_POST['update'])) {
-    $sql = "SELECT medlem.name, medlem.id, avgift.avgift
-    FROM pivot
-    JOIN medlem ON medlem_id = medlem.id
-    JOIN avgift ON avgift_id = avgift.id
-    WHERE 1";
+// lägg till en medlem i pivot
+if(isset($_POST['addToPivot'])) {
+    $pivotMember = $_POST['pivotMember'];
+    $pivotTeam = $_POST['pivotTeam'];
+    $pivotSport = $_POST['pivotSport'];
+    $pivotAvgift = $_POST['pivotAvgift'];
+
+    $sql = "INSERT INTO pivot (medlem_id, sport_id, lag_id, avgift_id) VALUES (:pivotMember, :pivotTeam, :pivotSport, :pivotAvgift)";
     $sth = $dbh->prepare($sql);
-    $sth->execute();
+    $sth->execute([':pivotMember' => $pivotMember, ':pivotTeam' => $pivotTeam, ':pivotSport' => $pivotSport, ':pivotAvgift' => $pivotAvgift]);
     $result = $sth->fetchAll();
-    foreach($result AS $medlem) {
-        echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] . " | Användar id: " . $medlem['id'] . "<br>";
-    }
+    echo "<p> En ny medlem har lagts till i pivot tabellen</p>";
    
 }
 // ###########################################################################
