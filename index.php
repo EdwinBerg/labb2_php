@@ -104,9 +104,9 @@ if($_SESSION['checkLogin'] == 1) {
  //lägger till en medlem
  if(isset($_POST['addMember'])) {
      $newMember = $_POST['newMember'];
-     $sql = "INSERT INTO medlem (name) VALUES ($newMember)";
+     $sql = "INSERT INTO medlem (name) VALUES (:name)";
      $sth = $dbh->prepare($sql);
-     $sth->execute([$newMember => 'name']);
+     $sth->execute([':name' => $newMember]);
      $result = $sth->fetchAll();
      echo "<center><p> " . $newMember . " har lagts till!</p></center>";
  }
