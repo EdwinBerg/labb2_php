@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 31, 2020 at 11:55 AM
+-- Generation Time: May 31, 2020 at 08:45 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.2.14
 
@@ -61,12 +61,14 @@ INSERT INTO `lag` (`id`, `lag`) VALUES
 (2, 'p10'),
 (3, 'p12'),
 (4, 'p14'),
-(5, 'p16'),
 (6, 'f8'),
 (7, 'f10'),
 (8, 'f12'),
 (9, 'f14'),
-(10, 'f16');
+(14, 'Motionsgruppen'),
+(15, 'Master'),
+(16, 'Elite'),
+(17, 'Barn');
 
 -- --------------------------------------------------------
 
@@ -112,56 +114,56 @@ CREATE TABLE `medlem` (
 --
 
 INSERT INTO `medlem` (`id`, `name`) VALUES
-(1, 'Jon'),
-(3, 'Karl'),
-(4, 'Oscar'),
-(5, 'Edwin'),
-(6, 'Ogge'),
-(7, 'Eddan'),
-(8, 'Lucas'),
-(9, 'Liam'),
-(10, 'William'),
-(11, 'Elias'),
-(12, 'Noah'),
-(13, 'Hugo'),
-(14, 'Oliver'),
-(15, 'Adam'),
-(16, 'Mattias'),
-(17, 'Tom'),
-(18, 'Alice'),
-(19, 'Olivia'),
-(20, 'Astrid'),
-(21, 'Maja'),
-(22, 'Vera'),
-(23, 'Ebba'),
-(24, 'Ella'),
-(25, 'Wilma'),
-(26, 'Alma'),
-(27, 'Johanna'),
-(28, 'Malin'),
-(29, 'Lilly'),
-(30, 'Jesper'),
-(31, 'Jasmina'),
-(32, 'Ida'),
-(33, 'Annie'),
-(34, 'Hanna'),
-(35, 'Josefin'),
-(36, 'Tilda'),
-(37, 'Elin'),
-(38, 'Doris'),
-(39, 'Andrea'),
-(40, 'Zigge'),
-(41, 'Janna'),
-(42, 'Frida'),
-(43, 'Bella'),
-(44, 'Sara'),
-(45, 'Clas'),
-(46, 'Kennet'),
-(47, 'Kent'),
-(48, 'Kevin'),
-(49, 'Jonas'),
-(50, 'Berra'),
-(51, 'Jakob');
+(62, 'Anders'),
+(63, 'Alexander'),
+(64, 'Andreas'),
+(65, 'Axel'),
+(66, 'Arne'),
+(67, 'Anton'),
+(68, 'Adam'),
+(69, 'Ali'),
+(70, 'Arvid'),
+(71, 'Albin'),
+(72, 'Alf'),
+(73, 'Allan'),
+(74, 'Ahmed'),
+(75, 'Alfred'),
+(76, 'Andre'),
+(77, 'Adrian'),
+(78, 'Ahmad'),
+(79, 'Albert'),
+(80, 'August'),
+(81, 'Alex'),
+(82, 'Alvar'),
+(83, 'Alvin'),
+(84, 'Artur'),
+(85, 'Antonio'),
+(86, 'Amir'),
+(87, 'Anna'),
+(88, 'Anita'),
+(89, 'Astrid'),
+(90, 'Alice'),
+(91, 'Annika'),
+(92, 'Amanda'),
+(93, 'Ann'),
+(94, 'Agneta'),
+(95, 'Anette'),
+(96, 'Alexandra'),
+(97, 'Anneli'),
+(98, 'Agnes'),
+(99, 'Anne'),
+(100, 'Alva'),
+(101, 'Alma'),
+(102, 'Alicia'),
+(103, 'Angelica'),
+(104, 'Annie'),
+(105, 'Annelie'),
+(106, 'Ann-Marie'),
+(107, 'Ann-Charlotte'),
+(108, 'Annette'),
+(109, 'Andrea'),
+(110, 'Aina'),
+(111, 'Ann-Christin');
 
 -- --------------------------------------------------------
 
@@ -182,14 +184,88 @@ CREATE TABLE `pivot` (
 --
 
 INSERT INTO `pivot` (`id`, `medlem_id`, `sport_id`, `lag_id`, `avgift_id`) VALUES
-(1, 1, 1, 5, 1),
-(3, 3, 1, 2, 1),
-(4, 4, 3, 3, 2),
-(5, 5, 2, 4, 2),
-(6, 6, 3, 5, 1),
-(7, 7, 3, 3, 1),
-(8, 21, 1, 9, 1),
-(9, 37, 2, 7, 1);
+(34, 62, 1, 1, 1),
+(35, 63, 1, 1, 1),
+(36, 64, 1, 1, 1),
+(37, 65, 1, 1, 2),
+(38, 66, 1, 2, 1),
+(39, 67, 1, 2, 1),
+(40, 68, 1, 2, 2),
+(41, 69, 1, 2, 1),
+(42, 70, 1, 3, 1),
+(43, 71, 1, 3, 1),
+(44, 72, 1, 3, 2),
+(45, 73, 1, 3, 1),
+(46, 74, 1, 4, 1),
+(47, 75, 1, 4, 2),
+(48, 76, 1, 4, 1),
+(49, 77, 1, 4, 1),
+(50, 78, 2, 14, 1),
+(51, 79, 2, 14, 2),
+(52, 80, 2, 14, 1),
+(53, 81, 2, 14, 1),
+(54, 82, 3, 15, 1),
+(55, 83, 3, 15, 1),
+(56, 84, 3, 15, 1),
+(57, 85, 3, 15, 1),
+(58, 86, 3, 16, 1),
+(59, 87, 3, 16, 1),
+(60, 88, 3, 16, 1),
+(61, 89, 3, 16, 1),
+(62, 90, 2, 17, 1),
+(76, 91, 2, 17, 1),
+(77, 92, 2, 17, 1),
+(78, 93, 2, 17, 2),
+(79, 94, 1, 6, 1),
+(80, 95, 1, 6, 1),
+(81, 96, 1, 6, 2),
+(82, 97, 1, 6, 2),
+(83, 98, 1, 7, 2),
+(84, 99, 1, 7, 2),
+(85, 100, 1, 7, 2),
+(86, 101, 1, 7, 1),
+(87, 102, 1, 8, 2),
+(88, 103, 1, 8, 2),
+(89, 104, 1, 8, 2),
+(90, 105, 1, 8, 1),
+(91, 106, 1, 9, 1),
+(92, 107, 1, 9, 1),
+(93, 108, 1, 9, 2),
+(94, 109, 1, 9, 1),
+(95, 110, 1, 9, 2),
+(96, 111, 1, 9, 2),
+(97, 87, 1, 6, 1),
+(98, 88, 1, 8, 1),
+(99, 89, 1, 9, 1),
+(100, 90, 1, 7, 2),
+(101, 91, 1, 6, 2),
+(102, 92, 1, 7, 2),
+(103, 93, 1, 7, 1),
+(104, 94, 1, 6, 1),
+(105, 95, 1, 6, 1),
+(106, 96, 1, 6, 2),
+(107, 97, 1, 6, 2),
+(108, 98, 1, 7, 2),
+(109, 99, 1, 7, 2),
+(110, 100, 1, 7, 2),
+(111, 101, 1, 7, 1),
+(112, 102, 1, 8, 2),
+(113, 103, 1, 8, 2),
+(114, 104, 1, 8, 2),
+(115, 105, 1, 8, 1),
+(116, 106, 1, 9, 1),
+(117, 107, 1, 9, 1),
+(118, 108, 1, 9, 2),
+(119, 109, 1, 9, 1),
+(120, 110, 1, 9, 2),
+(121, 111, 1, 9, 2),
+(122, 87, 1, 6, 1),
+(123, 88, 1, 8, 1),
+(124, 89, 1, 9, 1),
+(125, 90, 1, 7, 2),
+(126, 91, 1, 6, 2),
+(127, 92, 1, 7, 2),
+(128, 93, 1, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -256,7 +332,7 @@ ALTER TABLE `sports`
 -- AUTO_INCREMENT for table `lag`
 --
 ALTER TABLE `lag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `login`
@@ -268,13 +344,13 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT for table `medlem`
 --
 ALTER TABLE `medlem`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT for table `pivot`
 --
 ALTER TABLE `pivot`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT for table `sports`

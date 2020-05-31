@@ -266,25 +266,13 @@ if(isset($_POST['addToPivot'])) {
 
 // Ta bort från pivot
 if(isset($_POST['removeFromPivot'])) {
-    $pivotMember = $_POST['pivotMember'];
-    $pivotSport = $_POST['pivotSport'];
-    $pivotTeam = $_POST['pivotTeam'];
-    $pivotAvgift = $_POST['pivotAvgift'];
+    $pivotId = $_POST['pivotId'];
 
-    $name = "SELECT medlem.name, lag.lag, sports.sport FROM pivot
-    JOIN medlem ON medlem_id = medlem.id
-    JOIN sports ON sport_id = sports.id 
-    JOIN lag ON lag_id = lag.id
-    WHERE medlem.id = :medlem_id AND sport_id = :sport_id AND lag_id = :lag_id";
-    $namesth = $dbh->prepare($name);
-    $namesth->execute([':medlem_id' => $pivotMember, 'sport_id' => $pivotSport, 'lag_id' => $pivotTeam]);
-    $resultName =  $namesth->fetchAll();
-
-    $sql = "DELETE FROM pivot WHERE medlem_id = :medlem_id AND sport_id = :sport_id AND lag_id = :lag_id";
+    $sql = "DELETE FROM pivot WHERE id = :pivotId";
     $sth = $dbh->prepare($sql);
-    $sth->execute([':medlem_id' => $pivotMember, 'sport_id' => $pivotSport, 'lag_id' => $pivotTeam]);
+    $sth->execute([':pivotId' => $pivotId]);
     $result = $sth->fetchAll();
-    echo "<center><p> " . $resultName[0]["name"] . " har tagits bort från laget/gruppen " . $resultName[0]["lag"] . " i " . $resultName[0]["sport"] . "!</p></center>";
+    echo "<center><p>Personen har tagits bort från laget/gruppen</p></center>";
 }
 
 // ###########################################################################
