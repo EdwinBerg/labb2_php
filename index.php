@@ -76,7 +76,7 @@ if($_SESSION['checkLogin'] == 1) {
                     $sth-> execute();
                     $result = $sth->fetchAll();
                     foreach($result as $medlem) {
-                        echo "<option value=\"" . $medlem['name'] . "\">" . $medlem['name'] . "</option>";
+                        echo "<option value=\"" . $medlem['id'] . "\">" . $medlem['name'] . "</option>";
                     }
                 ?>
             </select>
@@ -180,11 +180,15 @@ if($_SESSION['checkLogin'] == 1) {
 // ta bort en medlem
  if(isset($_POST['removeMember'])) {
     $removeMember = $_POST['member'];
-    $sql = "DELETE FROM medlem WHERE name = :name";
+    $name = "SELECT * FROM medlem WHERE id = $removeMember";
+    $namesth = $dbh->prepare($name);
+    $namesth->execute();
+    $resultName =  $namesth->fetchAll();
+    $sql = "DELETE FROM medlem WHERE id = :id";
     $sth = $dbh->prepare($sql);
-    $sth->execute([':name' => $removeMember]);
+    $sth->execute([':id' => $removeMember]);
     $result = $sth->fetchAll();
-    echo "<center><p> " . $removeMember . " har tagits bort!</p></center>";
+    echo "<center><p> " . $resultName[0]["name"] . " har tagits bort!</p></center>";
 }
 
 // lägg till ett lag 
