@@ -43,60 +43,124 @@ if(isset($_POST['login'])) {
 if($_SESSION['checkLogin'] == 1) {
     ?>
         <form method="post"> 
-            <input type="submit" value="Logout" name="logout">
+            <input type="submit" value="Logout" name="logout"> <br><br>
         </form>
     <?php
     if(isset($_POST['logout'])) {
         session_destroy();
         echo "<p>Utloggad!</p>";
-    }
+    } 
+
+ // lägg till medlem
+ ?>
+ <div style="float: right;">
+ <form method="post">
+     <div>
+         <h3>Lägg till ny medlem</h3>
+        <input name="newMember" placeholder="Skriv in ny medlem">
+         <input type="submit" value="Lägg till" name="addMember">
+     </div>
+    <br><br>
+
+<!-- tabort medlem -->
+     <div>
+        <h3>Ta bort medlem</h3>
+         dropdown
+         <input type="submit" value="Ta bort" name="removeMember">
+     </div>
+     <br><hr style="width: 100%;"><br>
+
+<!-- lägg till ett lag-->
+     <div>
+         <h3>Lägg till ett lag</h3>
+        <input name="newTeam" placeholder="Skriv in nytt lag">
+        <input type="submit" value="Lägg till" name="addTeam">
+     </div>
+    <br><br>
+
+<!-- tabort ett lag -->
+     <div>
+        <h3>Ta bort ett lag</h3>
+        <!-- gör drop down -->
+        dropdown
+        <input type="submit" value="Ta bort" name="removeTeam">
+    </div>
+    <br><hr style="width: 100%;"><br>
+
+    <!-- uppdatera medlem -->
+    <div>
+        <h3>Uppdatera en medlem</h3>
+        <!-- gör drop down -->
+        dropdown namn med id <br>
+        dropdown med lag <br>
+        dropdown med sport <br>
+        <input type="submit" value="Redigera" name="redigera">
+    </div>
+    <br><hr style="width: 100%;"><br>
+  </form> 
+ </div>
+ <?php 
+ 
+ //lägger till en medlem
+ if(isset($_POST['addMember'])) {
+     $newMember = $_POST['newMember'];
+     $sql = "INSERT INTO medlem (name) VALUES ($newMember)";
+     $sth = $dbh->prepare($sql);
+     $sth->execute([$newMember => 'name']);
+     $result = $sth->fetchAll();
+     echo "<center><p> " . $newMember . " har lagts till!</p></center>";
+ }
 
 // lägger till 3st sporter
 ?>
     <form method="post">
-        <input type="submit" value="Fotboll" name="fotboll">
-    </form>
+        <div>
+            <input type="submit" value="Fotboll" name="fotboll">
+        </div>
 
-    <form method="post">
-        <input type="submit" value="Skidor" name="skidor">
-    </form>
+        <div>
+            <input type="submit" value="Skidor" name="skidor">
+        </div>
 
-    <form method="post">
-        <input type="submit" value="Gymnastik" name="gymnastik">
-    </form>
+        <div>
+            <input type="submit" value="Gymnastik" name="gymnastik">
+        </div>
 
-    <form method="post">
-        <input type="submit" value="Medlemmar" name="medlemmar">
+        <div>
+            <input type="submit" value="Medlemmar" name="medlemmar">
+        </div>
     </form>
 <?php 
  // Översikt över alla medlemmar
 if(isset($_POST['medlemmar'])) {
-    $sql = "SELECT medlem.name, avgift.avgift
+    $sql = "SELECT medlem.name, medlem.id, avgift.avgift
     FROM pivot
-    JOIN medlem ON medlem_id = medlem.id 
+    JOIN medlem ON medlem_id = medlem.id
     JOIN avgift ON avgift_id = avgift.id
     WHERE 1";
     $sth = $dbh->prepare($sql);
     $sth->execute();
     $result = $sth->fetchAll();
     foreach($result AS $medlem) {
-        echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] ."<br>";
+        echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] . " | Användar id: " . $medlem['id'] . "<br>";
     }
-    
+   
 }
+
 // översikt över alla som spelar fotboll
 if(isset($_POST['fotboll'])) {
-    $sql = "SELECT medlem.name, sports.sport, avgift.avgift
+    $sql = "SELECT medlem.name, sports.sport, avgift.avgift, lag.lag
     FROM pivot
     JOIN medlem ON medlem_id = medlem.id
     JOIN sports ON sport_id = sports.id
     JOIN avgift ON avgift_id = avgift.id
+    JOIN lag ON lag_id = lag.id
     WHERE sport_id = 1";
     $sth = $dbh->prepare($sql);
     $sth->execute();
     $result = $sth->fetchAll();
     foreach($result AS $medlem) {
-         echo $medlem['name'] . " - " . $medlem['sport'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
+         echo $medlem['name'] . " - " . $medlem['sport'] . " | Lag: " . $medlem['lag'] . " | Medlemsavgift: " . $medlem['avgift'] . "<br>";
     }
   
  }
@@ -138,7 +202,7 @@ if(isset($_POST['fotboll'])) {
     ?>
     <form method="post">
         <h2>Logga in </h2>
-        <input type="text" placeholder="Skriv in email" name="email">
+        <input type="email" placeholder="Skriv in email" name="email">
         <input type="password" placeholder="Skriv in lösenord" name="password">
         <input type="submit" value="Login" name="login">
     </form>
