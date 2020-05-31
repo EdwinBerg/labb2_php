@@ -195,7 +195,8 @@ if($_SESSION['checkLogin'] == 1) {
                         echo "<option value=\"" . $avgift['id'] . "\">" . $avgift['avgift'] . "</option>";
                     }
                 ?>
-            </select> <br> <br>
+            </select> <br><br>
+
         <input type="submit" value="Lägg till" name="addToPivot">
         <input type="submit" value="Uppdatera" name="update">
         <input type="submit" value="Ta bort" name="removeFromPivot">
@@ -323,19 +324,61 @@ if(isset($_POST['update'])) {
             <input type="submit" value="Medlemmar" name="medlemmar">
         </div>
     </form>
+
+       <!-- Visa alla lag-->
+        <form method="post">
+            <div>
+            <label for="showTeams">Lag:</label>
+            <select id="showTeams" name="showChosenTeam">
+
+                <?php
+                    $sql = "SELECT * FROM lag";
+                    $sth = $dbh->prepare($sql);
+                    $sth-> execute();
+                    $result = $sth->fetchAll();
+                    foreach($result as $lag) {
+                        echo "<option value=\"" . $lag['id'] . "\">" . $lag['lag'] . "</option>";
+                    }
+                ?>
+            </select>
+            <input type="submit" value="Visa" name="showPickedTeam">
+    </div> <br><br>
+    </form>
 <?php 
+
+// dropdown menu, översikt över alla lag
+if(isset($_POST['showPickedTeam'])) {
+    $chosenTeam = $_POST['showChosenTeam'];
+    $sql = "SELECT medlem.name, sports.sport, avgift.avgift, lag.lag
+    FROM pivot
+    JOIN medlem ON medlem_id = medlem.id
+    JOIN sports ON sport_id = sports.id
+    JOIN avgift ON avgift_id = avgift.id
+    JOIN lag ON lag_id = lag.id
+    WHERE lag_id = :lag_id";
+    $sth = $dbh->prepare($sql);
+    $sth->execute([':lag_id' => $chosenTeam]);
+    $result = $sth->fetchAll();
+    echo "<h3>" . $result[0]['lag'] . "</h3>";
+    foreach($result AS $team) {
+        echo $team['name'] . " - " . $team['sport'] . " | Lag: " . $team['lag'] . " | Medlemsavgift: " . $team['avgift'] . "<br>";
+    }
+ }
+
  // Översikt över alla medlemmar
 if(isset($_POST['medlemmar'])) {
-    $sql = "SELECT medlem.name, medlem.id, avgift.avgift
+    $sql = "SELECT medlem.name, medlem.id, avgift.avgift, lag.lag, sports.sport
     FROM pivot
     JOIN medlem ON medlem_id = medlem.id
     JOIN avgift ON avgift_id = avgift.id
+    JOIN sports ON sport_id = sports.id
+    JOIN lag ON lag_id = lag.id
     WHERE 1";
     $sth = $dbh->prepare($sql);
     $sth->execute();
     $result = $sth->fetchAll();
     foreach($result AS $medlem) {
-        echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] . " | Användar id: " . $medlem['id'] . "<br>";
+        echo $medlem['name'] .  " | Medlemsavgift: " . $medlem['avgift'] . " | Användar id: " . $medlem['id'] . " | Lag: " . $medlem['lag'] ." | Sport: " . $medlem['sport'] ."<br>";
     }
    
 }
